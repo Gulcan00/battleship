@@ -40,6 +40,13 @@ export default function Gameboard() {
   }
 
   function receiveAttack(row, col) {
+    if (row < 0 || row >= BOARD_SIZE) {
+      throw new Error('Row out of board');
+    }
+    if (col < 0 || col >= BOARD_SIZE) {
+      throw new Error('Column out of board');
+    }
+
     const newBoard = board.slice();
     if (newBoard[row][col] && Object.keys(ships).includes(newBoard[row][col])) {
       ships[newBoard[row][col]].hit();

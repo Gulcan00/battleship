@@ -116,3 +116,15 @@ test('Edge case place ship', () => {
     'Ship does not fit'
   );
 });
+
+test('Attacks a ship with row outside board', () => {
+  const row = -1;
+  const col = 0;
+  expect(() => gameboard.receiveAttack(row, col)).toThrow('Row out of board');
+});
+
+test('Attacks a ship with column outside board', () => {
+  const row = 4;
+  const col = 20;
+  expect(() => gameboard.placeShip(row, col)).toThrow('Column out of board');
+});
