@@ -1,13 +1,18 @@
 import Gameboard from '../Gameboard';
 
 let gameboard;
+const BOARD_SIZE = 10;
+const BATTLESHIP_SIZE = 4;
 
-beforeAll(() => {
+const createEmptyBoard = () =>
+  Array.from({ length: BOARD_SIZE }, () => Array(BOARD_SIZE).fill(null));
+
+beforeEach(() => {
   gameboard = Gameboard();
 });
 
 test('Initial board is 10 x 10 grid of null', () => {
-  const initialBoard = Array(10).fill(Array(10).fill(null));
+  const initialBoard = createEmptyBoard();
   expect(gameboard.getBoard()).toEqual(initialBoard);
 });
 
@@ -15,7 +20,7 @@ test('Place a ship on the board', () => {
   const row = 0;
   const col = 0;
   gameboard.placeShip(row, col, 'battleship');
-  const expectedBoard = Array(10).fill(Array(10).fill(null));
+  const expectedBoard = createEmptyBoard();
   for (let i = row; i < 4; i += 1) {
     expectedBoard[i][col] = 'battleship';
   }
@@ -37,4 +42,39 @@ test('Place a ship with column outside board', () => {
   expect(() => gameboard.placeShip(row, col, 'battleship')).toThrow(
     'Column out of board'
   );
+});
+
+test('Receives attack to a ship', () => {
+  gameboard.placeShip(0, 0, 'battleship');
+  gameboard.receiveAttack(0, 0);
+  const expectedBoard = createEmptyBoard();
+  for (let i = 0; i < BATTLESHIP_SIZE; i += 1) {
+    expectedBoard[i][0] = 'battleship';
+  }
+  expectedBoard[0][0] = 'hit';
+  expect(gameboard.getBoard()).toEqual(expectedBoard);
+});
+
+test('Sinks a ship', () => {
+  gameboard.placeShip(0, 0, 'battleship');
+  const expectedBoard = createEmptyBoard();
+
+  for (let i = 0; i < BATTLESHIP_SIZE; i += 1) {
+    gameboard.receiveAttack(i, 0);
+    expectedBoard[i][0] = 'hit';
+  }
+
+  expect(gameboard.getBoard()).toEqual(expectedBoard);
+});
+
+test('Receives attack misses ship', () => {
+  gameboard.placeShip(0, 0, 'battleship');
+  const expectedBoard = createEmptyBoard();
+  for (let i = 0; i < 4; i += 1) {
+    expectedBoard[i][0] = 'battleship';
+  }
+
+  gameboard.receiveAttack(3, 4);
+  expectedBoard[3][4] = 'miss';
+  expect(gameboard.getBoard()).toEqual(expectedBoard);
 });

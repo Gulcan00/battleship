@@ -10,7 +10,9 @@ export default function Gameboard() {
   };
 
   const BOARD_SIZE = 10;
-  let board = Array(BOARD_SIZE).fill(Array(BOARD_SIZE).fill(null));
+  let board = Array.from({ length: BOARD_SIZE }, () =>
+    Array(BOARD_SIZE).fill(null)
+  );
 
   function getBoard() {
     return board;
@@ -33,8 +35,20 @@ export default function Gameboard() {
     board = newBoard;
   }
 
+  function receiveAttack(row, col) {
+    const newBoard = board.slice();
+    if (newBoard[row][col] && Object.keys(ships).includes(newBoard[row][col])) {
+      ships[newBoard[row][col]].hit();
+      newBoard[row][col] = 'hit';
+    } else if (!newBoard[row][col]) {
+      newBoard[row][col] = 'miss';
+    }
+    board = newBoard;
+  }
+
   return {
     getBoard,
     placeShip,
+    receiveAttack,
   };
 }
