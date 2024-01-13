@@ -108,3 +108,11 @@ test('All ships are sunk', () => {
 
   expect(gameboard.allIsSunk()).toBe(true);
 });
+
+test('Edge case place ship', () => {
+  const row = 8;
+  const col = 1;
+  expect(() => gameboard.placeShip(row, col, 'carrier')).toThrow(
+    'Ship does not fit'
+  );
+});

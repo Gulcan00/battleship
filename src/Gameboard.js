@@ -26,8 +26,12 @@ export default function Gameboard() {
       throw new Error('Column out of board');
     }
 
-    const newBoard = board.slice();
     const shipLength = ships[shipName].length;
+    if (row + shipLength > BOARD_SIZE) {
+      throw new Error('Ship does not fit');
+    }
+
+    const newBoard = board.slice();
     for (let i = row; i < row + shipLength; i += 1) {
       newBoard[i][col] = shipName;
     }
