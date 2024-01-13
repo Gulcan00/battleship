@@ -22,6 +22,16 @@ export default function Game() {
   const player1 = Player({ name: 'John', player2Board });
   const player2 = Player({ name: 'Computer', player1Board, isComputer: true });
 
+  function checkWinner() {
+    if (player1Board.allIsSunk()) {
+      return player2.name;
+    }
+    if (player2Board.allIsSunk()) {
+      return player1.name;
+    }
+    return null;
+  }
+
   return {
     player1,
     player2,
