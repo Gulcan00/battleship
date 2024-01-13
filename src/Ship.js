@@ -1,4 +1,4 @@
-export default function Ship({ length }) {
+export default function Ship(length) {
   let hitCount = 0;
 
   function hit() {
@@ -6,7 +6,7 @@ export default function Ship({ length }) {
   }
 
   function isSunk() {
-    return hitCount === length;
+    return hitCount >= length;
   }
 
   return {
