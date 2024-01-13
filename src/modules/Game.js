@@ -37,5 +37,6 @@ export default function Game() {
     player2,
     player1Board,
     player2Board,
+    checkWinner,
   };
 }
