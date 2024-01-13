@@ -78,3 +78,33 @@ test('Receives attack misses ship', () => {
   expectedBoard[3][4] = 'miss';
   expect(gameboard.getBoard()).toEqual(expectedBoard);
 });
+
+test('All ships are sunk', () => {
+  gameboard.placeShip(0, 0, 'battleship'); // size 4
+  gameboard.placeShip(0, 1, 'carrier'); // size 5
+  gameboard.placeShip(0, 2, 'destroyer'); // size 3
+  gameboard.placeShip(0, 3, 'submarine'); // size 3
+  gameboard.placeShip(0, 4, 'patrolBoat'); // size 2
+
+  for (let i = 0; i < 4; i += 1) {
+    gameboard.receiveAttack(i, 0); // attack battleship
+  }
+
+  for (let i = 0; i < 5; i += 1) {
+    gameboard.receiveAttack(i, 1); // attack carrier
+  }
+
+  for (let i = 0; i < 3; i += 1) {
+    gameboard.receiveAttack(i, 2); // attack destroyer
+  }
+
+  for (let i = 0; i < 3; i += 1) {
+    gameboard.receiveAttack(i, 3); // attack submarine
+  }
+
+  for (let i = 0; i < 2; i += 1) {
+    gameboard.receiveAttack(i, 4); // attack patrolBoat
+  }
+
+  expect(gameboard.allIsSunk()).toBe(true);
+});

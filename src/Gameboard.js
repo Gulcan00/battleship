@@ -46,9 +46,14 @@ export default function Gameboard() {
     board = newBoard;
   }
 
+  function allIsSunk() {
+    return Object.values(ships).every((ship) => ship.isSunk());
+  }
+
   return {
     getBoard,
     placeShip,
     receiveAttack,
+    allIsSunk,
   };
 }
