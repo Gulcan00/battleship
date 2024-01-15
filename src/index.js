@@ -1,18 +1,22 @@
 import Game from './modules/Game';
 import './style.css';
 
-function displayBoard(board) {
+function displayBoard(board, onClick = null) {
   const div = document.createElement('div');
   div.classList.add('board');
-  board.forEach((row) =>
-    row.forEach((cell) => {
+  board.forEach((row, rowIndex) =>
+    row.forEach((cell, colIndex) => {
       const btn = document.createElement('button');
       if (cell) {
         btn.innerText = cell;
       } else {
         btn.innerText = ' _ ';
       }
-
+      btn.dataset.row = rowIndex;
+      btn.dataset.col = colIndex;
+      if (onClick) {
+        btn.addEventListener('click', onClick);
+      }
       div.appendChild(btn);
     })
   );
@@ -20,15 +24,34 @@ function displayBoard(board) {
 }
 
 function domController() {
-  const game = Game();
+  let game = Game();
   const body = document.querySelector('body');
-  const div = document.createElement('div');
-  div.style.display = 'flex';
-  div.style.flexDirection = 'column';
-  div.style.gap = '20px';
-  div.appendChild(displayBoard(game.player1Board.getBoard()));
-  div.appendChild(displayBoard(game.player2Board.getBoard()));
-  body.appendChild(div);
+  const boards = document.createElement('div');
+  boards.classList.add('boardsContainer');
+  body.appendChild(boards);
+
+  function updateScreen() {
+    boards.innerHTML = null;
+    const player2Board = displayBoard(game.player2Board.getBoard(), (e) => {
+      const { row } = e.target.dataset;
+      const { col } = e.target.dataset;
+      game.player2Board.receiveAttack(row, col);
+      game.player1Board.receiveAttack(0, 0);
+      updateScreen();
+    });
+
+    const player1Board = displayBoard(game.player1Board.getBoard());
+    boards.appendChild(player1Board);
+    boards.appendChild(player2Board);
+
+    if (game.checkWinner()) {
+      console.log(game.checkWinner());
+      game = Game();
+      updateScreen();
+    }
+  }
+
+  updateScreen();
 }
 
 domController();
