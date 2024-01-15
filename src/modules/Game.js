@@ -19,8 +19,12 @@ export default function Game() {
   player2Board.placeShip(3, 6, 'submarine');
   player2Board.placeShip(5, 9, 'patrolBoat');
 
-  const player1 = Player({ name: 'John', player2Board });
-  const player2 = Player({ name: 'Computer', player1Board, isComputer: true });
+  const player1 = Player({ name: 'John', gameboard: player2Board });
+  const player2 = Player({
+    name: 'Computer',
+    gameboard: player1Board,
+    isComputer: true,
+  });
 
   function checkWinner() {
     if (player1Board.allIsSunk()) {

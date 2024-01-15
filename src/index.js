@@ -35,8 +35,8 @@ function domController() {
     const player2Board = displayBoard(game.player2Board.getBoard(), (e) => {
       const { row } = e.target.dataset;
       const { col } = e.target.dataset;
-      game.player2Board.receiveAttack(row, col);
-      game.player1Board.receiveAttack(0, 0);
+      game.player1.attack(row, col);
+      game.player2.attack(0, 0);
       updateScreen();
     });
 
