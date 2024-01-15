@@ -7,11 +7,12 @@ function displayBoard(board, onClick = null) {
   board.forEach((row, rowIndex) =>
     row.forEach((cell, colIndex) => {
       const btn = document.createElement('button');
-      if (cell) {
-        btn.innerText = cell;
-      } else {
-        btn.innerText = ' _ ';
+      if (cell === 'hit') {
+        btn.classList.add('hit');
+      } else if (cell === 'miss') {
+        btn.classList.add('miss');
       }
+      btn.innerText = '';
       btn.dataset.row = rowIndex;
       btn.dataset.col = colIndex;
       if (onClick) {
@@ -26,6 +27,13 @@ function displayBoard(board, onClick = null) {
 function domController() {
   let game = Game();
   const body = document.querySelector('body');
+
+  const title = document.createElement('h1');
+  title.innerText = 'BATTLESHIP';
+  title.style.textAlign = 'center';
+  title.style.fontSize = '48px';
+  body.appendChild(title);
+
   const boards = document.createElement('div');
   boards.classList.add('boardsContainer');
   body.appendChild(boards);
