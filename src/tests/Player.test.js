@@ -1,4 +1,4 @@
-import Player from '../Player';
+import Player from '../modules/Player';
 
 test('Set player name', () => {
   const player = Player({ name: 'john', gameboard: null });

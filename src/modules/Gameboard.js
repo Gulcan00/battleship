@@ -61,10 +61,15 @@ export default function Gameboard() {
     return Object.values(ships).every((ship) => ship.isSunk());
   }
 
+  function hasCellBeenAttacked(row, col) {
+    return board[row][col] === 'hit' || board[row][col] === 'miss';
+  }
+
   return {
     getBoard,
     placeShip,
     receiveAttack,
     allIsSunk,
+    hasCellBeenAttacked,
   };
 }

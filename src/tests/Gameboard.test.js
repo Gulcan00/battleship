@@ -128,3 +128,12 @@ test('Attacks a ship with column outside board', () => {
   const col = 20;
   expect(() => gameboard.placeShip(row, col)).toThrow('Column out of board');
 });
+
+test('A cell that has been attacked', () => {
+  gameboard.receiveAttack(0, 0);
+  expect(gameboard.hasCellBeenAttacked(0, 0)).toBe(true);
+});
+
+test('A cell has not been attacked', () => {
+  expect(gameboard.hasCellBeenAttacked(0, 0)).toBe(false);
+})
