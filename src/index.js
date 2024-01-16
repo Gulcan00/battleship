@@ -4,6 +4,9 @@ import './style.css';
 function displayBoard(board, onClick = null) {
   const div = document.createElement('div');
   div.classList.add('board');
+  if (!onClick) {
+    div.classList.add('player');
+  }
   board.forEach((row, rowIndex) =>
     row.forEach((cell, colIndex) => {
       const btn = document.createElement('button');
@@ -11,6 +14,8 @@ function displayBoard(board, onClick = null) {
         btn.classList.add('hit');
       } else if (cell === 'miss') {
         btn.classList.add('miss');
+      } else if (cell) {
+        btn.classList.add(cell);
       }
       btn.innerText = '';
       btn.dataset.row = rowIndex;
@@ -59,7 +64,7 @@ function domController() {
     boards.appendChild(player2Board);
 
     if (game.checkWinner()) {
-      console.log(game.checkWinner());
+      alert(`${game.checkWinner()} won!!!!`);
       game = Game();
       updateScreen();
     }

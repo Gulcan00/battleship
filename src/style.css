@@ -45,13 +45,51 @@ body {
   height: 100%;
 }
 
-button {
+.board > button {
   appearance: none;
-  background-color: inherit;
+  background-color: transparent;
   outline: none;
   border: 1px solid white;
   padding: 10px;
   position: relative;
+}
+
+.board.player > button.carrier,
+.board.player > button.battleship,
+.board.player > button.submarine,
+.board.player > button.destroyer,
+.board.player > button.patrolBoat {
+  border: 2px solid aqua;
+}
+
+.board.player > button.carrier::after {
+  background: url(./images/carrier.svg);
+}
+.board.player > button.battleship::after {
+  background: url(./images/battleship.svg);
+}
+.board.player > button.submarine::after {
+  background: url(./images/submarine.svg);
+}
+.board.player > button.destroyer::after {
+  background: url(./images/destroyer.svg);
+}
+.board.player > button.patrolBoat::after {
+  background: url(./images/patrolBoat.svg);
+}
+
+.board.player > button.carrier::after,
+.board.player > button.battleship::after,
+.board.player > button.submarine::after,
+.board.player > button.destroyer::after,
+.board.player > button.patrolBoat::after {
+  position: absolute;
+  content: '';
+  width: 100%;
+  height: 100%;
+  top: 0;
+  right: 0;
+  background-size: cover;
 }
 
 button.hit::after,
