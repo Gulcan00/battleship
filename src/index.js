@@ -31,6 +31,14 @@ function displayBoard(board, onClick = null) {
 
 function domController() {
   let game = Game();
+  const ships = [
+    { name: 'carrier', length: 5 },
+    { name: 'battleship', length: 4 },
+    { name: 'destroyer', length: 3 },
+    { name: 'submarine', length: 3 },
+    { name: 'patrolBoat', length: 2 },
+  ];
+  let orientation = 'vertical';
   const body = document.querySelector('body');
 
   const title = document.createElement('h1');
@@ -46,6 +54,62 @@ function domController() {
   const boards = document.createElement('div');
   boards.classList.add('boardsContainer');
   body.appendChild(boards);
+
+  function typeWriter(text, speed, i = 0) {
+    if (i < text.length) {
+      messageDiv.innerHTML += text.charAt(i);
+      setTimeout(() => typeWriter(text, speed, i + 1), speed);
+    }
+  }
+
+  let currentShipIndx = 0;
+  function placeShips() {
+    let text = `Place your ${ships[currentShipIndx].name}`;
+    typeWriter(text, 50);
+
+    const initialBoard = displayBoard(
+      game.player1Board.getBoard(),
+      handleCellClick
+    );
+
+    body.appendChild(initialBoard);
+  }
+
+  function updatePlaceShipsBoard() {
+    const currentBoard = document.querySelector('.board');
+    body.removeChild(currentBoard);
+
+    const updatedBoard = displayBoard(
+      game.player1Board.getBoard(),
+      handleCellClick
+    );
+    updatedBoard.classList.add('player');
+    body.appendChild(updatedBoard);
+  }
+
+  const handleCellClick = (e) => {
+    const { row } = e.target.dataset;
+    const { col } = e.target.dataset;
+    try {
+      game.player1Board.placeShip(
+        parseInt(row, 10),
+        parseInt(col, 10),
+        ships[currentShipIndx].name,
+        orientation
+      );
+      updatePlaceShipsBoard();
+      currentShipIndx += 1;
+      if (currentShipIndx < ships.length) {
+        const text = `Place your ${ships[currentShipIndx].name}`;
+        messageDiv.innerHTML = null;
+        typeWriter(text, 50);
+      } else {
+        const currentBoard = document.querySelector('.board');
+        body.removeChild(currentBoard);
+        updateScreen();
+      }
+    } catch (e) {}
+  };
 
   function updateScreen() {
     boards.innerHTML = null;
@@ -70,7 +134,7 @@ function domController() {
     }
   }
 
-  updateScreen();
+  placeShips();
 }
 
 domController();

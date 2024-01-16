@@ -115,3 +115,10 @@ button.hit::after {
 button.miss::after {
   background-color: white;
 }
+
+.messageContainer {
+  background-color: black;
+  color: green;
+  padding: 4px;
+  letter-spacing: normal;
+}
