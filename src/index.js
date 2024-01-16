@@ -34,6 +34,10 @@ function domController() {
   title.style.fontSize = '48px';
   body.appendChild(title);
 
+  const messageDiv = document.createElement('div');
+  messageDiv.classList.add('messageContainer');
+  body.appendChild(messageDiv);
+
   const boards = document.createElement('div');
   boards.classList.add('boardsContainer');
   body.appendChild(boards);
