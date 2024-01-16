@@ -136,4 +136,16 @@ test('A cell that has been attacked', () => {
 
 test('A cell has not been attacked', () => {
   expect(gameboard.hasCellBeenAttacked(0, 0)).toBe(false);
-})
+});
+
+test('Place a ship on horizontal axis', () => {
+  const row = 0;
+  const col = 0;
+  gameboard.placeShip(row, col, 'battleship', 'horizontal');
+  const expectedBoard = createEmptyBoard();
+  for (let i = col; i < 4; i += 1) {
+    expectedBoard[row][i] = 'battleship';
+  }
+
+  expect(gameboard.getBoard()).toEqual(expectedBoard);
+});

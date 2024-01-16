@@ -18,7 +18,7 @@ export default function Gameboard() {
     return board;
   }
 
-  function placeShip(row, col, shipName) {
+  function placeShip(row, col, shipName, orientation = 'vertical') {
     if (row < 0 || row >= BOARD_SIZE) {
       throw new Error('Row out of board');
     }
@@ -32,8 +32,14 @@ export default function Gameboard() {
     }
 
     const newBoard = board.slice();
-    for (let i = row; i < row + shipLength; i += 1) {
-      newBoard[i][col] = shipName;
+    if (orientation === 'vertical') {
+      for (let i = row; i < row + shipLength; i += 1) {
+        newBoard[i][col] = shipName;
+      }
+    } else {
+      for (let i = col; i < col + shipLength; i += 1) {
+        newBoard[row][i] = shipName;
+      }
     }
 
     board = newBoard;
