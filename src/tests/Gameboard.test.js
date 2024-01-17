@@ -149,3 +149,12 @@ test('Place a ship on horizontal axis', () => {
 
   expect(gameboard.getBoard()).toEqual(expectedBoard);
 });
+
+test('Prevent overlap of ship', () => {
+  const row = 0;
+  const col = 0;
+  gameboard.placeShip(row, col, 'patrolBoat');
+  expect(() => gameboard.placeShip(row + 1, col, 'battleship')).toThrow(
+    'A ship already exists'
+  );
+});

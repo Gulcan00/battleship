@@ -34,10 +34,16 @@ export default function Gameboard() {
     const newBoard = board.slice();
     if (orientation === 'vertical') {
       for (let i = row; i < row + shipLength; i += 1) {
+        if (newBoard[i][col]) {
+          throw new Error('A ship already exists');
+        }
         newBoard[i][col] = shipName;
       }
     } else {
       for (let i = col; i < col + shipLength; i += 1) {
+        if (newBoard[row][i]) {
+          throw new Error('A ship already exists');
+        }
         newBoard[row][i] = shipName;
       }
     }
