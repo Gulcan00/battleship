@@ -8,7 +8,9 @@ function displayBoard(board, onClick = null) {
   board.forEach((row, rowIndex) =>
     row.forEach((cell, colIndex) => {
       const btn = document.createElement('button');
-      btn.classList.add(cell);
+      if (cell) {
+        btn.classList.add(cell);
+      }
       btn.innerText = '';
       btn.dataset.row = rowIndex;
       btn.dataset.col = colIndex;
@@ -58,8 +60,7 @@ function domController() {
   function updateScreen() {
     boards.innerHTML = null;
     const computerBoard = displayBoard(game.player2Board.getBoard(), (e) => {
-      const { row } = e.target.dataset;
-      const { col } = e.target.dataset;
+      const { row, col } = e.target.dataset;
       if (!game.player2Board.hasCellBeenAttacked(row, col)) {
         game.player1.attack(row, col);
         game.player2.attack();
@@ -73,6 +74,7 @@ function domController() {
     boards.appendChild(computerBoard);
 
     if (game.checkWinner()) {
+      // eslint-disable-next-line no-alert
       alert(`${game.checkWinner()} won!!!!`);
       game = Game();
       updateScreen();
@@ -86,13 +88,12 @@ function domController() {
     body.removeChild(currentBoard);
 
     const updatedBoard = displayBoard(game.player1Board.getBoard(), onClick);
-    updatedBoard.classList.add('player');
+    updatedBoard.classList.add('player', 'initial');
     body.appendChild(updatedBoard);
   }
 
   const handleCellClick = (e) => {
-    const { row } = e.target.dataset;
-    const { col } = e.target.dataset;
+    const { row, col } = e.target.dataset;
     try {
       game.player1Board.placeShip(
         parseInt(row, 10),
@@ -124,6 +125,7 @@ function domController() {
       game.player1Board.getBoard(),
       handleCellClick
     );
+    initialBoard.classList.add('player', 'initial');
 
     body.appendChild(initialBoard);
   }
