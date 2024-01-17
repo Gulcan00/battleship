@@ -27,7 +27,11 @@ export default function Gameboard() {
     }
 
     const shipLength = ships[shipName].length;
-    if (row + shipLength > BOARD_SIZE) {
+    if (orientation === 'vertical') {
+      if (row + shipLength > BOARD_SIZE) {
+        throw new Error('Ship does not fit');
+      }
+    } else if (col + shipLength > BOARD_SIZE) {
       throw new Error('Ship does not fit');
     }
 

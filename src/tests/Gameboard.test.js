@@ -109,7 +109,7 @@ test('All ships are sunk', () => {
   expect(gameboard.allIsSunk()).toBe(true);
 });
 
-test('Edge case place ship', () => {
+test('Edge case place ship vertical', () => {
   const row = 8;
   const col = 1;
   expect(() => gameboard.placeShip(row, col, 'carrier')).toThrow(
@@ -150,11 +150,28 @@ test('Place a ship on horizontal axis', () => {
   expect(gameboard.getBoard()).toEqual(expectedBoard);
 });
 
-test('Prevent overlap of ship', () => {
+test('Prevent overlap of ship vertical', () => {
   const row = 0;
   const col = 0;
   gameboard.placeShip(row, col, 'patrolBoat');
   expect(() => gameboard.placeShip(row + 1, col, 'battleship')).toThrow(
     'A ship already exists'
+  );
+});
+
+test('Prevent overlap of ship horizontal', () => {
+  const row = 1;
+  const col = 8;
+  gameboard.placeShip(row, col, 'patrolBoat', 'horizontal');
+  expect(() =>
+    gameboard.placeShip(row, col, 'patrolBoat', 'horizontal')
+  ).toThrow('A ship already exists');
+});
+
+test('Edge case place ship horizontal', () => {
+  const row = 1;
+  const col = 8;
+  expect(() => gameboard.placeShip(row, col, 'carrier', 'horizontal')).toThrow(
+    'Ship does not fit'
   );
 });
