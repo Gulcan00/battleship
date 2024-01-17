@@ -4,19 +4,11 @@ import './style.css';
 function displayBoard(board, onClick = null) {
   const div = document.createElement('div');
   div.classList.add('board');
-  if (!onClick) {
-    div.classList.add('player');
-  }
+
   board.forEach((row, rowIndex) =>
     row.forEach((cell, colIndex) => {
       const btn = document.createElement('button');
-      if (cell === 'hit') {
-        btn.classList.add('hit');
-      } else if (cell === 'miss') {
-        btn.classList.add('miss');
-      } else if (cell) {
-        btn.classList.add(cell);
-      }
+      btn.classList.add(cell);
       btn.innerText = '';
       btn.dataset.row = rowIndex;
       btn.dataset.col = colIndex;
@@ -38,9 +30,10 @@ function domController() {
     { name: 'submarine', length: 3 },
     { name: 'patrolBoat', length: 2 },
   ];
-  let orientation = 'vertical';
   const body = document.querySelector('body');
+  let orientation = 'vertical';
 
+  // Add battleship title
   const title = document.createElement('h1');
   title.innerText = 'BATTLESHIP';
   title.style.textAlign = 'center';
@@ -62,27 +55,37 @@ function domController() {
     }
   }
 
-  let currentShipIndx = 0;
-  function placeShips() {
-    let text = `Place your ${ships[currentShipIndx].name}`;
-    typeWriter(text, 50);
+  function updateScreen() {
+    boards.innerHTML = null;
+    const computerBoard = displayBoard(game.player2Board.getBoard(), (e) => {
+      const { row } = e.target.dataset;
+      const { col } = e.target.dataset;
+      if (!game.player2Board.hasCellBeenAttacked(row, col)) {
+        game.player1.attack(row, col);
+        game.player2.attack();
+        updateScreen();
+      }
+    });
 
-    const initialBoard = displayBoard(
-      game.player1Board.getBoard(),
-      handleCellClick
-    );
+    const playerBoard = displayBoard(game.player1Board.getBoard());
+    playerBoard.classList.add('player');
+    boards.appendChild(playerBoard);
+    boards.appendChild(computerBoard);
 
-    body.appendChild(initialBoard);
+    if (game.checkWinner()) {
+      alert(`${game.checkWinner()} won!!!!`);
+      game = Game();
+      updateScreen();
+    }
   }
 
-  function updatePlaceShipsBoard() {
+  let currentShipIndx = 0;
+
+  function updatePlaceShipsBoard(onClick) {
     const currentBoard = document.querySelector('.board');
     body.removeChild(currentBoard);
 
-    const updatedBoard = displayBoard(
-      game.player1Board.getBoard(),
-      handleCellClick
-    );
+    const updatedBoard = displayBoard(game.player1Board.getBoard(), onClick);
     updatedBoard.classList.add('player');
     body.appendChild(updatedBoard);
   }
@@ -97,7 +100,7 @@ function domController() {
         ships[currentShipIndx].name,
         orientation
       );
-      updatePlaceShipsBoard();
+      updatePlaceShipsBoard(handleCellClick);
       currentShipIndx += 1;
       if (currentShipIndx < ships.length) {
         const text = `Place your ${ships[currentShipIndx].name}`;
@@ -108,30 +111,21 @@ function domController() {
         body.removeChild(currentBoard);
         updateScreen();
       }
-    } catch (e) {}
+    } catch {
+      e.target.classList.add('invalid');
+    }
   };
 
-  function updateScreen() {
-    boards.innerHTML = null;
-    const player2Board = displayBoard(game.player2Board.getBoard(), (e) => {
-      const { row } = e.target.dataset;
-      const { col } = e.target.dataset;
-      if (!game.player2Board.hasCellBeenAttacked(row, col)) {
-        game.player1.attack(row, col);
-        game.player2.attack();
-        updateScreen();
-      }
-    });
+  function placeShips() {
+    const text = `Place your ${ships[currentShipIndx].name}`;
+    typeWriter(text, 50);
 
-    const player1Board = displayBoard(game.player1Board.getBoard());
-    boards.appendChild(player1Board);
-    boards.appendChild(player2Board);
+    const initialBoard = displayBoard(
+      game.player1Board.getBoard(),
+      handleCellClick
+    );
 
-    if (game.checkWinner()) {
-      alert(`${game.checkWinner()} won!!!!`);
-      game = Game();
-      updateScreen();
-    }
+    body.appendChild(initialBoard);
   }
 
   placeShips();
