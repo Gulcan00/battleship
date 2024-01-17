@@ -142,11 +142,16 @@ button.miss::after {
   color: lime;
   padding: 8px;
   letter-spacing: normal;
-  border: 4px inset dimgray;
-  width: 190px;
+  width: 100%;
   box-shadow:
     rgba(0, 0, 0, 0.16) 0px 3px 6px,
     rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  min-width: 200px;
+}
+
+.message-container::before {
+  content: '>';
+  margin: 0px 4px;
 }
 
 .change-orientation {

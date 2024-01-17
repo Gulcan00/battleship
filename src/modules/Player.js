@@ -15,10 +15,12 @@ export default function Player({ name, gameboard, isComputer = false }) {
   function attack(row, col) {
     if (!isComputer) {
       gameboard.receiveAttack(row, col);
-    } else {
-      const [computerRow, computerCol] = getMove();
-      gameboard.receiveAttack(computerRow, computerCol);
+      return [row, col];
     }
+
+    const [computerRow, computerCol] = getMove();
+    gameboard.receiveAttack(computerRow, computerCol);
+    return [computerRow, computerCol];
   }
   return {
     name,

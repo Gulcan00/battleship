@@ -23,7 +23,7 @@ function displayBoard(board, onClick = null) {
   return div;
 }
 
-function typeWriter(element, text, speed, i = 0) {
+function typeWriter(element, text, speed = 50, i = 0) {
   if (i < text.length) {
     element.innerHTML += text.charAt(i);
     setTimeout(() => typeWriter(element, text, speed, i + 1), speed);
@@ -49,6 +49,9 @@ function domController() {
   title.style.fontSize = '48px';
   body.appendChild(title);
 
+  const boards = document.createElement('div');
+  boards.classList.add('boards-container');
+
   const messageDiv = document.createElement('div');
   messageDiv.classList.add('message-container');
 
@@ -62,15 +65,33 @@ function domController() {
     changeOrientationBtn.innerText = orientation;
   });
 
+  const resultTxt = (value) => (value === 'hit' ? 'hits' : 'misses');
+
   function updateScreen() {
-    const boards = document.querySelector('.boardsContainer');
-    boards.innerHTML = '';
+    boards.replaceChildren();
     const computerBoard = displayBoard(game.player2Board.getBoard(), (e) => {
       const { row, col } = e.target.dataset;
       if (!game.player2Board.hasCellBeenAttacked(row, col)) {
         game.player1.attack(row, col);
-        game.player2.attack();
+        const computerCell = game.player2Board.getBoard()[row][col];
+        const playerTxt = `${game.player1.name} shoots and ${resultTxt(
+          computerCell
+        )}!`;
+        messageDiv.innerText = '';
+        typeWriter(messageDiv, playerTxt);
         updateScreen();
+
+        setTimeout(() => {
+          const [computerRow, computerCol] = game.player2.attack();
+          const playerCell =
+            game.player1Board.getBoard()[computerRow][computerCol];
+          const computerTxt = `${game.player2.name} shoots and ${resultTxt(
+            playerCell
+          )}!`;
+          messageDiv.innerText = '';
+          typeWriter(messageDiv, computerTxt);
+          updateScreen();
+        }, 2000);
       }
     });
 
@@ -111,14 +132,15 @@ function domController() {
       currentShipIndx += 1;
       if (currentShipIndx < ships.length) {
         const text = `Place your ${ships[currentShipIndx].name}`;
-        messageDiv.innerHTML = null;
+        messageDiv.innerText = '';
         typeWriter(messageDiv, text, 50);
       } else {
         const currentBoard = document.querySelector('.board');
         body.removeChild(currentBoard);
-        const div = document.querySelector('.container').parentNode;
+        const div = document.querySelector('.message-container').parentNode;
         div.removeChild(changeOrientationBtn);
         messageDiv.innerText = null;
+        body.appendChild(boards);
         updateScreen();
       }
     } catch {
@@ -137,10 +159,6 @@ function domController() {
     div.appendChild(messageDiv);
     div.appendChild(changeOrientationBtn);
     body.appendChild(div);
-
-    const boards = document.createElement('div');
-    boards.classList.add('boards-container');
-    body.appendChild(boards);
 
     const initialBoard = displayBoard(
       game.player1Board.getBoard(),
