@@ -39,10 +39,10 @@ h1 {
     rgba(0, 0, 34, 1) 70%
   );
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  border: 1px solid white;
+  border: 2px inset #f3f4f6;
 }
 
-.boardsContainer {
+.boards-container {
   display: flex;
   flex-wrap: wrap;
   gap: 50px;
@@ -51,11 +51,14 @@ h1 {
   height: 100%;
 }
 
-.board > button {
+button {
   appearance: none;
-  background-color: transparent;
   outline: none;
-  border: 1px solid white;
+}
+
+.board > button {
+  background-color: transparent;
+  border: 1px solid #f3f4f6;
   padding: 10px;
   position: relative;
   cursor: crosshair;
@@ -134,14 +137,31 @@ button.miss::after {
   background-color: white;
 }
 
-.messageContainer {
+.message-container {
   background-color: black;
   color: lime;
   padding: 8px;
   letter-spacing: normal;
   border: 4px inset dimgray;
-  width: 200px;
+  width: 190px;
   box-shadow:
     rgba(0, 0, 0, 0.16) 0px 3px 6px,
     rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
+
+.change-orientation {
+  border-radius: 6px;
+  color: inherit;
+  background-color: #16222a;
+  border-radius: 1px solid black;
+  padding: 8px;
+  text-transform: uppercase;
+  font-size: inherit;
+  font-family: inherit;
+  cursor: pointer;
+  width: 150px;
+}
+
+.change-orientation:hover {
+  background-color: #293e4d;
 }

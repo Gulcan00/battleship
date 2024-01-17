@@ -23,6 +23,13 @@ function displayBoard(board, onClick = null) {
   return div;
 }
 
+function typeWriter(element, text, speed, i = 0) {
+  if (i < text.length) {
+    element.innerHTML += text.charAt(i);
+    setTimeout(() => typeWriter(element, text, speed, i + 1), speed);
+  }
+}
+
 function domController() {
   let game = Game();
   const ships = [
@@ -43,22 +50,21 @@ function domController() {
   body.appendChild(title);
 
   const messageDiv = document.createElement('div');
-  messageDiv.classList.add('messageContainer');
-  body.appendChild(messageDiv);
+  messageDiv.classList.add('message-container');
 
-  const boards = document.createElement('div');
-  boards.classList.add('boardsContainer');
-  body.appendChild(boards);
-
-  function typeWriter(text, speed, i = 0) {
-    if (i < text.length) {
-      messageDiv.innerHTML += text.charAt(i);
-      setTimeout(() => typeWriter(text, speed, i + 1), speed);
-    }
-  }
+  const changeOrientationBtn = document.createElement('button');
+  changeOrientationBtn.classList.add('change-orientation');
+  changeOrientationBtn.innerText = orientation;
+  changeOrientationBtn.addEventListener('click', () => {
+    const newOrientation =
+      orientation === 'vertical' ? 'horizontal' : 'vertical';
+    orientation = newOrientation;
+    changeOrientationBtn.innerText = orientation;
+  });
 
   function updateScreen() {
-    boards.innerHTML = null;
+    const boards = document.querySelector('.boardsContainer');
+    boards.innerHTML = '';
     const computerBoard = displayBoard(game.player2Board.getBoard(), (e) => {
       const { row, col } = e.target.dataset;
       if (!game.player2Board.hasCellBeenAttacked(row, col)) {
@@ -106,10 +112,13 @@ function domController() {
       if (currentShipIndx < ships.length) {
         const text = `Place your ${ships[currentShipIndx].name}`;
         messageDiv.innerHTML = null;
-        typeWriter(text, 50);
+        typeWriter(messageDiv, text, 50);
       } else {
         const currentBoard = document.querySelector('.board');
         body.removeChild(currentBoard);
+        const div = document.querySelector('.container').parentNode;
+        div.removeChild(changeOrientationBtn);
+        messageDiv.innerText = null;
         updateScreen();
       }
     } catch {
@@ -117,9 +126,21 @@ function domController() {
     }
   };
 
-  function placeShips() {
+  function initialScreen() {
     const text = `Place your ${ships[currentShipIndx].name}`;
-    typeWriter(text, 50);
+    typeWriter(messageDiv, text, 50);
+
+    const div = document.createElement('div');
+    div.style.display = 'flex';
+    div.style.gap = '8px';
+    div.style.alignItems = 'center';
+    div.appendChild(messageDiv);
+    div.appendChild(changeOrientationBtn);
+    body.appendChild(div);
+
+    const boards = document.createElement('div');
+    boards.classList.add('boards-container');
+    body.appendChild(boards);
 
     const initialBoard = displayBoard(
       game.player1Board.getBoard(),
@@ -130,7 +151,7 @@ function domController() {
     body.appendChild(initialBoard);
   }
 
-  placeShips();
+  initialScreen();
 }
 
 domController();
