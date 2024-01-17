@@ -175,3 +175,32 @@ test('Edge case place ship horizontal', () => {
     'Ship does not fit'
   );
 });
+
+test('Randomly places all ships', () => {
+  gameboard.randomlyPlaceShips();
+  const board = gameboard.getBoard();
+  const flatBoard = board.flat();
+
+  const carrierCount = flatBoard.filter((cell) => cell === 'carrier').length;
+  expect(carrierCount).toBe(5);
+
+  const battleshipCount = flatBoard.filter(
+    (cell) => cell === 'battleship'
+  ).length;
+  expect(battleshipCount).toBe(4);
+
+  const destroyerCount = flatBoard.filter(
+    (cell) => cell === 'destroyer'
+  ).length;
+  expect(destroyerCount).toBe(3);
+
+  const submarineCount = flatBoard.filter(
+    (cell) => cell === 'submarine'
+  ).length;
+  expect(submarineCount).toBe(3);
+
+  const patrolBoatCount = flatBoard.filter(
+    (cell) => cell === 'patrolBoat'
+  ).length;
+  expect(patrolBoatCount).toBe(2);
+});

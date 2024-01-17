@@ -6,11 +6,7 @@ export default function Game(playerName = 'Player') {
   const player2Board = Gameboard();
 
   // Populate player 2 board
-  player2Board.placeShip(0, 9, 'carrier');
-  player2Board.placeShip(2, 0, 'battleship');
-  player2Board.placeShip(0, 2, 'destroyer');
-  player2Board.placeShip(3, 6, 'submarine');
-  player2Board.placeShip(5, 9, 'patrolBoat');
+  player2Board.randomlyPlaceShips();
 
   const player1 = Player({ name: playerName, gameboard: player2Board });
   const player2 = Player({

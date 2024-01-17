@@ -81,11 +81,31 @@ export default function Gameboard() {
     return board[row][col] === 'hit' || board[row][col] === 'miss';
   }
 
+  function randomlyPlaceShips() {
+    const orientations = ['vertical', 'horizontal'];
+    Object.keys(ships).forEach((ship) => {
+      let placed = false;
+      while (!placed) {
+        const row = Math.floor(Math.random() * BOARD_SIZE);
+        const col = Math.floor(Math.random() * BOARD_SIZE);
+        const orientation =
+          orientations[Math.floor(Math.random() * orientations.length)];
+        try {
+          placeShip(row, col, ship, orientation);
+          placed = true;
+        } catch {
+          // If placeShip throws an error, we just try again with new random row, col, and orientation
+        }
+      }
+    });
+  }
+
   return {
     getBoard,
     placeShip,
     receiveAttack,
     allIsSunk,
     hasCellBeenAttacked,
+    randomlyPlaceShips,
   };
 }
