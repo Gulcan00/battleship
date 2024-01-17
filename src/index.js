@@ -23,13 +23,6 @@ function displayBoard(board, onClick = null) {
   return div;
 }
 
-function typeWriter(element, text, speed = 50, i = 0) {
-  if (i < text.length) {
-    element.innerHTML += text.charAt(i);
-    setTimeout(() => typeWriter(element, text, speed, i + 1), speed);
-  }
-}
-
 function getPlayerName() {
   return new Promise((resolve) => {
     const nameDiv = document.createElement('dialog');
@@ -73,6 +66,7 @@ function domController() {
   ];
   const body = document.querySelector('body');
   let orientation = 'vertical';
+  let currentShipIndx = 0;
 
   // Add battleship title
   const title = document.createElement('h1');
@@ -97,10 +91,42 @@ function domController() {
     changeOrientationBtn.innerText = orientation;
   });
 
+  const restartDialog = document.createElement('dialog');
+  const restart = document.createElement('button');
+  restart.innerText = 'Restart Game';
+  restartDialog.appendChild(restart);
+  body.appendChild(restartDialog);
+
   const resultTxt = (value) => (value === 'hit' ? 'hits' : 'misses');
+
+  function initialScreen(onClick) {
+    messageDiv.innerText = `Place your ${ships[currentShipIndx].name}`;
+
+    const div = document.createElement('div');
+    div.style.display = 'flex';
+    div.style.gap = '8px';
+    div.style.alignItems = 'center';
+    div.appendChild(messageDiv);
+    div.appendChild(changeOrientationBtn);
+    body.appendChild(div);
+
+    const initialBoard = displayBoard(game.player1Board.getBoard(), onClick);
+    initialBoard.classList.add('player', 'initial');
+
+    body.appendChild(initialBoard);
+  }
 
   function updateScreen() {
     boards.replaceChildren();
+    const getWinner = game.checkWinner();
+    if (getWinner) {
+      const loser = getWinner === 'Computer' ? game.player1.name : 'Computer';
+      messageDiv.innerText = '';
+      messageDiv.innerText = `${game.checkWinner()} sunk all of ${loser}'s ships!`;
+      restartDialog.showModal();
+      return;
+    }
+
     const computerBoard = displayBoard(game.player2Board.getBoard(), (e) => {
       const { row, col } = e.target.dataset;
       if (!game.player2Board.hasCellBeenAttacked(row, col)) {
@@ -110,19 +136,20 @@ function domController() {
           computerCell
         )}!`;
         messageDiv.innerText = '';
-        typeWriter(messageDiv, playerTxt);
+        messageDiv.innerText = playerTxt;
         updateScreen();
-
         setTimeout(() => {
-          const [computerRow, computerCol] = game.player2.attack();
-          const playerCell =
-            game.player1Board.getBoard()[computerRow][computerCol];
-          const computerTxt = `${game.player2.name} shoots and ${resultTxt(
-            playerCell
-          )}!`;
-          messageDiv.innerText = '';
-          typeWriter(messageDiv, computerTxt);
-          updateScreen();
+          if (!getWinner) {
+            const [computerRow, computerCol] = game.player2.attack();
+            const playerCell =
+              game.player1Board.getBoard()[computerRow][computerCol];
+            const computerTxt = `${game.player2.name} shoots and ${resultTxt(
+              playerCell
+            )}!`;
+            messageDiv.innerText = '';
+            messageDiv.innerText = computerTxt;
+            updateScreen();
+          }
         }, 2000);
       }
     });
@@ -131,16 +158,7 @@ function domController() {
     playerBoard.classList.add('player');
     boards.appendChild(playerBoard);
     boards.appendChild(computerBoard);
-
-    if (game.checkWinner()) {
-      // eslint-disable-next-line no-alert
-      alert(`${game.checkWinner()} won!!!!`);
-      game = Game();
-      updateScreen();
-    }
   }
-
-  let currentShipIndx = 0;
 
   function updatePlaceShipsBoard(onClick) {
     const currentBoard = document.querySelector('.board');
@@ -163,9 +181,8 @@ function domController() {
       updatePlaceShipsBoard(handleCellClick);
       currentShipIndx += 1;
       if (currentShipIndx < ships.length) {
-        const text = `Place your ${ships[currentShipIndx].name}`;
         messageDiv.innerText = '';
-        typeWriter(messageDiv, text, 50);
+        messageDiv.innerText = `Place your ${ships[currentShipIndx].name}`;
       } else {
         const currentBoard = document.querySelector('.board');
         body.removeChild(currentBoard);
@@ -180,30 +197,20 @@ function domController() {
     }
   };
 
-  function initialScreen() {
-    const text = `Place your ${ships[currentShipIndx].name}`;
-    typeWriter(messageDiv, text, 50);
-
-    const div = document.createElement('div');
-    div.style.display = 'flex';
-    div.style.gap = '8px';
-    div.style.alignItems = 'center';
-    div.appendChild(messageDiv);
-    div.appendChild(changeOrientationBtn);
-    body.appendChild(div);
-
-    const initialBoard = displayBoard(
-      game.player1Board.getBoard(),
-      handleCellClick
-    );
-    initialBoard.classList.add('player', 'initial');
-
-    body.appendChild(initialBoard);
-  }
+  restart.addEventListener('click', () => {
+    restartDialog.close();
+    getPlayerName().then((name) => {
+      game = Game(name || undefined);
+      currentShipIndx = 0;
+      messageDiv.innerText = '';
+      body.removeChild(boards);
+      initialScreen(handleCellClick);
+    });
+  });
 
   getPlayerName().then((name) => {
     game = Game(name || undefined);
-    initialScreen();
+    initialScreen(handleCellClick);
   });
 }
 
