@@ -30,8 +30,40 @@ function typeWriter(element, text, speed = 50, i = 0) {
   }
 }
 
+function getPlayerName() {
+  return new Promise((resolve) => {
+    const nameDiv = document.createElement('dialog');
+    const form = document.createElement('form');
+    const label = document.createElement('label');
+    label.innerText = 'Name';
+    label.htmlFor = 'name';
+    const input = document.createElement('input');
+    input.name = 'name';
+    input.id = 'name';
+    const submit = document.createElement('button');
+    submit.innerText = 'Submit';
+
+    form.append(label);
+    form.appendChild(input);
+    form.appendChild(submit);
+    nameDiv.appendChild(form);
+    const body = document.querySelector('body');
+    body.appendChild(nameDiv);
+
+    nameDiv.showModal();
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const name = formData.get('name');
+      nameDiv.close();
+      resolve(name);
+    });
+  });
+}
+
 function domController() {
-  let game = Game();
+  let game;
   const ships = [
     { name: 'carrier', length: 5 },
     { name: 'battleship', length: 4 },
@@ -169,7 +201,10 @@ function domController() {
     body.appendChild(initialBoard);
   }
 
-  initialScreen();
+  getPlayerName().then((name) => {
+    game = Game(name || undefined);
+    initialScreen();
+  });
 }
 
 domController();

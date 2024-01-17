@@ -1,7 +1,7 @@
 import Gameboard from './Gameboard';
 import Player from './Player';
 
-export default function Game() {
+export default function Game(playerName = 'Player') {
   const player1Board = Gameboard();
   const player2Board = Gameboard();
 
@@ -12,7 +12,7 @@ export default function Game() {
   player2Board.placeShip(3, 6, 'submarine');
   player2Board.placeShip(5, 9, 'patrolBoat');
 
-  const player1 = Player({ name: 'John', gameboard: player2Board });
+  const player1 = Player({ name: playerName, gameboard: player2Board });
   const player2 = Player({
     name: 'Computer',
     gameboard: player1Board,
