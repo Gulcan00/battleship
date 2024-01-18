@@ -1,14 +1,14 @@
 import Game from './modules/Game';
 import './style.css';
 
-function displayBoard(board, onClick = null) {
+function displayBoard(board, onClick = null, isComputer = false) {
   const div = document.createElement('div');
   div.classList.add('board');
 
   board.forEach((row, rowIndex) =>
     row.forEach((cell, colIndex) => {
       const btn = document.createElement('button');
-      if (cell) {
+      if (cell && !isComputer) {
         btn.classList.add(cell);
       }
       btn.innerText = '';
@@ -53,6 +53,12 @@ function getPlayerName() {
       resolve(name);
     });
   });
+}
+
+function updateMessage(element, text) {
+  const tempElement = element;
+  tempElement.innerText = '';
+  tempElement.innerText = text;
 }
 
 function domController() {
@@ -121,38 +127,42 @@ function domController() {
     const getWinner = game.checkWinner();
     if (getWinner) {
       const loser = getWinner === 'Computer' ? game.player1.name : 'Computer';
-      messageDiv.innerText = '';
-      messageDiv.innerText = `${game.checkWinner()} sunk all of ${loser}'s ships!`;
+      updateMessage(
+        messageDiv,
+        `${game.checkWinner()} sunk all of ${loser}'s ships!`
+      );
       restartDialog.showModal();
       return;
     }
 
-    const computerBoard = displayBoard(game.player2Board.getBoard(), (e) => {
-      const { row, col } = e.target.dataset;
-      if (!game.player2Board.hasCellBeenAttacked(row, col)) {
-        game.player1.attack(row, col);
-        const computerCell = game.player2Board.getBoard()[row][col];
-        const playerTxt = `${game.player1.name} shoots and ${resultTxt(
-          computerCell
-        )}!`;
-        messageDiv.innerText = '';
-        messageDiv.innerText = playerTxt;
-        updateScreen();
-        setTimeout(() => {
-          if (!getWinner) {
-            const [computerRow, computerCol] = game.player2.attack();
-            const playerCell =
-              game.player1Board.getBoard()[computerRow][computerCol];
-            const computerTxt = `${game.player2.name} shoots and ${resultTxt(
-              playerCell
-            )}!`;
-            messageDiv.innerText = '';
-            messageDiv.innerText = computerTxt;
-            updateScreen();
-          }
-        }, 2000);
-      }
-    });
+    const computerBoard = displayBoard(
+      game.player2Board.getBoard(),
+      (e) => {
+        const { row, col } = e.target.dataset;
+        if (!game.player2Board.hasCellBeenAttacked(row, col)) {
+          game.player1.attack(row, col);
+          const computerCell = game.player2Board.getBoard()[row][col];
+          const playerTxt = `${game.player1.name} shoots and ${resultTxt(
+            computerCell
+          )}!`;
+          updateMessage(messageDiv, playerTxt);
+          updateScreen();
+          setTimeout(() => {
+            if (!getWinner) {
+              const [computerRow, computerCol] = game.player2.attack();
+              const playerCell =
+                game.player1Board.getBoard()[computerRow][computerCol];
+              const computerTxt = `${game.player2.name} shoots and ${resultTxt(
+                playerCell
+              )}!`;
+              updateMessage(messageDiv, computerTxt);
+              updateScreen();
+            }
+          }, 2000);
+        }
+      },
+      true
+    );
 
     const playerBoard = displayBoard(game.player1Board.getBoard());
     playerBoard.classList.add('player');
@@ -181,8 +191,7 @@ function domController() {
       updatePlaceShipsBoard(handleCellClick);
       currentShipIndx += 1;
       if (currentShipIndx < ships.length) {
-        messageDiv.innerText = '';
-        messageDiv.innerText = `Place your ${ships[currentShipIndx].name}`;
+        updateMessage(messageDiv, `Place your ${ships[currentShipIndx].name}`);
       } else {
         const currentBoard = document.querySelector('.board');
         body.removeChild(currentBoard);
