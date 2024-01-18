@@ -8,7 +8,7 @@ function displayBoard(board, onClick = null, isComputer = false) {
   board.forEach((row, rowIndex) =>
     row.forEach((cell, colIndex) => {
       const btn = document.createElement('button');
-      if (cell && !isComputer) {
+      if (cell === 'hit' || cell === 'miss' || (cell && !isComputer)) {
         btn.classList.add(cell);
       }
       btn.innerText = '';
