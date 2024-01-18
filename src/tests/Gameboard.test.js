@@ -204,3 +204,18 @@ test('Randomly places all ships', () => {
   ).length;
   expect(patrolBoatCount).toBe(2);
 });
+
+test('Valid placement, invalid placement then valid placement', () => {
+  gameboard.placeShip(3, 3, 'battleship');
+  expect(() => gameboard.placeShip(2, 3, 'carrier')).toThrow(
+    'A ship already exists'
+  );
+  gameboard.placeShip(3, 4, 'carrier');
+  const board = gameboard.getBoard().flat();
+
+  const battleshipCount = board.filter((cell) => cell === 'battleship').length;
+  expect(battleshipCount).toBe(4);
+
+  const carrierCount = board.filter((cell) => cell === 'carrier').length;
+  expect(carrierCount).toBe(5);
+});

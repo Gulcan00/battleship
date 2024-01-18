@@ -41,6 +41,9 @@ export default function Gameboard() {
         if (newBoard[i][col]) {
           throw new Error('A ship already exists');
         }
+      }
+
+      for (let i = row; i < row + shipLength; i += 1) {
         newBoard[i][col] = shipName;
       }
     } else {
@@ -48,6 +51,9 @@ export default function Gameboard() {
         if (newBoard[row][i]) {
           throw new Error('A ship already exists');
         }
+      }
+
+      for (let i = col; i < col + shipLength; i += 1) {
         newBoard[row][i] = shipName;
       }
     }
