@@ -35,6 +35,7 @@ function getPlayerName() {
     input.id = 'name';
     const submit = document.createElement('button');
     submit.innerText = 'Submit';
+    submit.classList.add('button');
 
     form.append(label);
     form.appendChild(input);
@@ -88,7 +89,7 @@ function domController() {
   messageDiv.classList.add('message-container');
 
   const changeOrientationBtn = document.createElement('button');
-  changeOrientationBtn.classList.add('change-orientation');
+  changeOrientationBtn.classList.add('button');
   changeOrientationBtn.innerText = orientation;
   changeOrientationBtn.addEventListener('click', () => {
     const newOrientation =
@@ -97,8 +98,13 @@ function domController() {
     changeOrientationBtn.innerText = orientation;
   });
 
+  const resetBoardBtn = document.createElement('button');
+  resetBoardBtn.classList.add('button');
+  resetBoardBtn.innerText = 'Reset';
+
   const restartDialog = document.createElement('dialog');
   const restart = document.createElement('button');
+  restart.classList.add('button');
   restart.innerText = 'Restart Game';
   restartDialog.appendChild(restart);
   body.appendChild(restartDialog);
@@ -114,6 +120,7 @@ function domController() {
     div.style.alignItems = 'center';
     div.appendChild(messageDiv);
     div.appendChild(changeOrientationBtn);
+    div.appendChild(resetBoardBtn);
     body.appendChild(div);
 
     const initialBoard = displayBoard(game.player1Board.getBoard(), onClick);
@@ -197,6 +204,7 @@ function domController() {
         body.removeChild(currentBoard);
         const div = document.querySelector('.message-container').parentNode;
         div.removeChild(changeOrientationBtn);
+        div.removeChild(resetBoardBtn);
         messageDiv.innerText = null;
         body.appendChild(boards);
         updateScreen();
@@ -215,6 +223,14 @@ function domController() {
       body.removeChild(boards);
       initialScreen(handleCellClick);
     });
+  });
+
+  resetBoardBtn.addEventListener('click', () => {
+    const { name } = game.player1;
+    game = Game(name || undefined);
+    updatePlaceShipsBoard(handleCellClick);
+    currentShipIndx = 0;
+    updateMessage(messageDiv, `Place your ${ships[currentShipIndx].name}`);
   });
 
   getPlayerName().then((name) => {

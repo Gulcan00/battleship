@@ -156,9 +156,9 @@ button.miss::after {
   margin: 0px 4px;
 }
 
-.change-orientation {
+.button {
   border-radius: 6px;
-  color: inherit;
+  color: white;
   background-color: #16222a;
   border-radius: 1px solid black;
   padding: 8px;
@@ -169,7 +169,7 @@ button.miss::after {
   width: 150px;
 }
 
-.change-orientation:hover {
+.button:hover {
   background-color: #293e4d;
 }
 
@@ -186,15 +186,6 @@ input {
 
 input:focus {
   border: 2px solid lime;
-}
-
-dialog button {
-  background-color: #16222a;
-  color: white;
-  border-radius: 6px;
-  padding: 8px;
-  text-transform: uppercase;
-  font-family: inherit;
 }
 
 label {
