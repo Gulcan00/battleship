@@ -112,7 +112,7 @@ function domController() {
   const resultTxt = (value) => (value === 'hit' ? 'hits' : 'misses');
 
   function initialScreen(onClick) {
-    messageDiv.innerText = `Place your ${ships[currentShipIndx].name}`;
+    messageDiv.innerText = `Place your ${ships[currentShipIndx].name} [Length: ${ships[currentShipIndx].length}]`;
 
     const div = document.createElement('div');
     div.style.display = 'flex';
@@ -188,6 +188,7 @@ function domController() {
 
   const handleCellClick = (e) => {
     const { row, col } = e.target.dataset;
+    e.target.classList.remove('invalid');
     try {
       game.player1Board.placeShip(
         parseInt(row, 10),
@@ -198,7 +199,10 @@ function domController() {
       updatePlaceShipsBoard(handleCellClick);
       currentShipIndx += 1;
       if (currentShipIndx < ships.length) {
-        updateMessage(messageDiv, `Place your ${ships[currentShipIndx].name}`);
+        updateMessage(
+          messageDiv,
+          `Place your ${ships[currentShipIndx].name} [Length: ${ships[currentShipIndx].length}]`
+        );
       } else {
         const currentBoard = document.querySelector('.board');
         body.removeChild(currentBoard);
