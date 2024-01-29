@@ -68,7 +68,10 @@ input {
 
 .board.player.initial > button[class]:hover,
 .board:not(.player) > button[class='hit']:hover,
-.board:not(.player) > button[class='miss']:hover {
+.board:not(.player) > button[class='miss']:hover,
+.board.player.initial > button[class]:focus,
+.board:not(.player) > button[class='hit']:focus,
+.board:not(.player) > button[class='miss']:focus {
   background-color: red;
 }
 
@@ -184,8 +187,10 @@ input {
   padding: 8px;
 }
 
-input:focus {
+input:focus,
+button:focus {
   border: 2px solid lime;
+  box-shadow: lime 0px 3px 8px;
 }
 
 label {
