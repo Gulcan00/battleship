@@ -5,5 +5,4 @@ This repository hosts a JavaScript implementation of the classic game "Battleshi
 ## How to Use
 Start a game and place your ships on the gameboard. On your turn, select a coordinate to attack on the enemy's board. The game tracks hits, misses, and sunk ships. Play alternates between you and the computer. The game ends when all of one player's ships are sunk.
 
-## Live Demo
-Experience the Battleship game by visiting the live demo [here](https://gulcan00.github.io/battleship/).
+## [Live Demo](https://gulcan00.github.io/battleship/)
