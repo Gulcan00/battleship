@@ -14,6 +14,7 @@ function displayBoard(board, onClick = null, isComputer = false) {
       btn.innerText = '';
       btn.dataset.row = rowIndex;
       btn.dataset.col = colIndex;
+      btn.ariaLabel = `Row ${rowIndex}, Column ${colIndex}`;
       if (onClick) {
         btn.addEventListener('click', onClick);
       }
